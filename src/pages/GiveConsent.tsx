@@ -7,8 +7,10 @@ import {
   Box,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const GiveConsent = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -27,8 +29,16 @@ const GiveConsent = () => {
     setFormData({ ...formData, [name]: checked });
   };
 
+  const isAnyCheckboxChecked =
+    formData.newsletter || formData.ads || formData.statistics;
+
+  const hasNameAndEmail =
+    formData.name && formData.email && isAnyCheckboxChecked;
+
+  const isFormValid = hasNameAndEmail && isAnyCheckboxChecked;
+
   const handleSubmit = () => {
-    console.log("Form submitted:", formData);
+    navigate("/consents");
   };
 
   return (
@@ -40,6 +50,7 @@ const GiveConsent = () => {
           value={formData.name}
           onChange={handleInputChange}
           variant="outlined"
+          required
         />
         <TextField
           label="Email address"
@@ -48,6 +59,7 @@ const GiveConsent = () => {
           value={formData.email}
           onChange={handleInputChange}
           variant="outlined"
+          required
         />
       </Box>
 
@@ -90,7 +102,12 @@ const GiveConsent = () => {
         />
       </Box>
 
-      <Button variant="contained" size="large" onClick={handleSubmit}>
+      <Button
+        variant="contained"
+        size="large"
+        onClick={handleSubmit}
+        disabled={!isFormValid}
+      >
         Give consent
       </Button>
     </Box>
