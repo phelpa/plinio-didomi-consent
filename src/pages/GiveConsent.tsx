@@ -8,9 +8,11 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { addConsent } from "../services/mockApi";
 
 const GiveConsent = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -37,8 +39,17 @@ const GiveConsent = () => {
 
   const isFormValid = hasNameAndEmail && isAnyCheckboxChecked;
 
-  const handleSubmit = () => {
-    navigate("/consents");
+  const handleSubmit = async () => {
+    if (loading) return;
+    setLoading(true);
+    try {
+      await addConsent(formData);
+      navigate("/consents");
+    } catch (error) {
+      console.error("Error submitting consent:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -51,6 +62,7 @@ const GiveConsent = () => {
           onChange={handleInputChange}
           variant="outlined"
           required
+          disabled={loading}
         />
         <TextField
           label="Email address"
@@ -60,6 +72,7 @@ const GiveConsent = () => {
           onChange={handleInputChange}
           variant="outlined"
           required
+          disabled={loading}
         />
       </Box>
 
@@ -74,6 +87,7 @@ const GiveConsent = () => {
               name="newsletter"
               checked={formData.newsletter}
               onChange={handleCheckboxChange}
+              disabled={loading}
             />
           }
           label="Receive newsletter"
@@ -85,6 +99,7 @@ const GiveConsent = () => {
               name="ads"
               checked={formData.ads}
               onChange={handleCheckboxChange}
+              disabled={loading}
             />
           }
           label="Be shown targeted ads"
@@ -96,6 +111,7 @@ const GiveConsent = () => {
               name="statistics"
               checked={formData.statistics}
               onChange={handleCheckboxChange}
+              disabled={loading}
             />
           }
           label="Contribute to anonymous visit statistics"
@@ -106,9 +122,9 @@ const GiveConsent = () => {
         variant="contained"
         size="large"
         onClick={handleSubmit}
-        disabled={!isFormValid}
+        disabled={!isFormValid || loading}
       >
-        Give consent
+        {loading ? "Submitting..." : "Give consent"}
       </Button>
     </Box>
   );
