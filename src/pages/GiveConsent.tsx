@@ -34,8 +34,7 @@ const GiveConsent = () => {
   const isAnyCheckboxChecked =
     formData.newsletter || formData.ads || formData.statistics;
 
-  const hasNameAndEmail =
-    formData.name && formData.email && isAnyCheckboxChecked;
+  const hasNameAndEmail = formData.name && formData.email;
 
   const isFormValid = hasNameAndEmail && isAnyCheckboxChecked;
 
