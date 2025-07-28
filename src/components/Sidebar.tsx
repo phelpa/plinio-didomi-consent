@@ -19,7 +19,12 @@ const Sidebar = ({ children }: SidebarProps) => {
 
   return (
     <Box>
-      <Drawer variant="permanent">
+      <Drawer
+        variant="permanent"
+        PaperProps={{
+          sx: { ml: 2 },
+        }}
+      >
         <Typography variant="h5" p={2}>
           Consent Manager
         </Typography>
